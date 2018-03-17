@@ -24,6 +24,14 @@ public class Tree {
     private static final float STAND_FACTOR = (CROWN_RADIUS_FACTOR / 0.28f);
     private static final float BRANCHES_FACTOR = 1.3f * STAND_FACTOR;
 
+	public void setBloomsDy(float bloomsDy) {
+		this.bloomsDy = bloomsDy;
+	}
+
+	public float getBloomsDy() {
+		return bloomsDy;
+	}
+
     // 动画步骤
     private enum Step {
         BRANCHES_GROWING,
@@ -40,8 +48,8 @@ public class Tree {
     private LinkedList<Branch> growingBranches = new LinkedList<>();
 
     // 树冠的素材
-    private float bloomsDx;
-    private float bloomsDy;
+    public float bloomsDx;
+    public float bloomsDy;
     private LinkedList<Bloom> growingBlooms = new LinkedList<>();
     private LinkedList<Bloom> cacheBlooms = new LinkedList<>();
 
@@ -63,7 +71,7 @@ public class Tree {
 
 
     public Tree(final int canvasWidth, final int canvasHeight) {
-        resolutionFactor = canvasHeight / 1080f;
+        resolutionFactor = canvasHeight / 1080f / 3;
 
         TreeMaker.init(canvasHeight, CROWN_RADIUS_FACTOR);
         Bloom.initDisplayParam(resolutionFactor);
@@ -82,7 +90,8 @@ public class Tree {
 
         // blooms
         bloomsDx = snapshotWidth / 2f;
-        bloomsDy = 435f * STAND_FACTOR * resolutionFactor;
+        bloomsDy = 800f * STAND_FACTOR * resolutionFactor;
+		bloomsDy = canvasHeight * 0.84f;
         TreeMaker.fillBlooms(cacheBlooms, BLOOM_NUM);
 
         // moving snapshot
@@ -90,7 +99,7 @@ public class Tree {
 
         // falling blooms
         fMaxY = canvasHeight - bloomsDy;
-        TreeMaker.fillFallingBlooms(fallingBlooms, 3);
+        TreeMaker.fillFallingBlooms(fallingBlooms, 10);
 
         snapshotDx = (canvasWidth - snapshotWidth) / 2f;
     }
@@ -200,15 +209,15 @@ public class Tree {
         canvas.translate(bloomsDx, bloomsDy);
         while (iterator.hasNext()) {
             FallingBloom bloom = iterator.next();
-            if (!bloom.fall(canvas, fMaxY)) {
+            if (!bloom.fall(canvas, fMaxY, bloomsDx, bloomsDy)) {
                 iterator.remove();
                 TreeMaker.recycleBloom(bloom);
             }
         }
         canvas.restore();
 
-        if (fallingBlooms.size() < 3) {
-            TreeMaker.fillFallingBlooms(fallingBlooms, CommonUtil.random(1, 2));
+        if (fallingBlooms.size() < 5) {
+            TreeMaker.fillFallingBlooms(fallingBlooms, CommonUtil.random(4, 8));
         }
     }
 }

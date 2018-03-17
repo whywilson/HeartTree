@@ -105,8 +105,8 @@ public class TreeMaker {
 
     private static boolean inHeart(float px, float py, float r) {
         //  (x^2+y^2-1)^3-x^2*y^3=0
-        float x = px / r;
-        float y = py / r;
+        float x = px * 3 / r;
+        float y = py * 3 / r;
         float sx = x * x;
         float sy = y * y;
         float a = sx + sy - 1;

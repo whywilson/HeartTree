@@ -39,21 +39,24 @@ public class FallingBloom extends Bloom {
     }
 
     private void initSpeed() {
-        ySpeed = CommonUtil.random(1.6f * sFactor, 2.7f * sFactor);
-        if(position.x < 0){
-            xSpeed = ySpeed * CommonUtil.random(0.5f * sFactor, 1.1f * sFactor);
+        ySpeed = CommonUtil.random(-2.7f * sFactor, 2.7f * sFactor);
+		if(Math.abs(ySpeed) < 1.0f){
+			ySpeed *= 2f;
+		}
+        if(ySpeed < 0){
+            xSpeed =  -ySpeed * CommonUtil.random(0.5f * sFactor, 1.1f * sFactor);
         }else{
             xSpeed = ySpeed * CommonUtil.random(0.8f * sFactor, 1.5f * sFactor);
         }
     }
 
-    public boolean fall(Canvas canvas, float fMaxY) {
+    public boolean fall(Canvas canvas, float fMaxY, float bloomsDx, float bloomsDy) {
         if(!validate){
             makeSnapshot();
             validate = true;
         }
         float r = getRadius();
-        if (position.y - r < fMaxY) {
+        if (position.y - r < fMaxY && bloomsDy + position.y + 2 * r > 0 && position.x + 2 * r + bloomsDx * 2 > 0) {
             position.x -= xSpeed;
             position.y += ySpeed;
             angle += 1f;

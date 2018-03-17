@@ -39,7 +39,7 @@ public class Branch {
             bezier(part * currLen);
             draw(canvas, scaleFactor);
             currLen++;
-            radius *= 0.97f;
+            radius *= 0.977f;
             return true;
         }else{
             return false;
